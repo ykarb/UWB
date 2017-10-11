@@ -36,21 +36,24 @@ def ExtractAmplitude(arr):
 
     return resultArray
 
-def PrepareSample(Amps, Start, NumPacket, label):
-    sample = pd.DataFrame(Amps[:, Start:Start+NumPacket])
+def PrepareSample(Amps, Starts, NumPacket, label):
+    result = np.empty([Amps.shape[0], NumPacket])
+    for i in range(0, Amps.shape[0]):
+        result[i,:] = Amps[i, Starts[i]:Starts[i]+NumPacket]
+    sample = pd.DataFrame(result)
     sample['Pos'] = label
     return sample
 
-def makeDataSet(start, numSample):
+def makeDataSet(numSample):
     startA, resA = ExtractRawFeature('/home/deeplearning/PycharmProjects/UWB/locA.txt')
     startB, resB = ExtractRawFeature('/home/deeplearning/PycharmProjects/UWB/locB.txt')
     AmpsA = ExtractAmplitude(resA)
     AmpsB = ExtractAmplitude(resB)
-    SampleA = PrepareSample(AmpsA, start, numSample, 'A')
-    SampleB = PrepareSample(AmpsB, start, numSample, 'B')
+    SampleA = PrepareSample(AmpsA, startA, numSample, 'A')
+    SampleB = PrepareSample(AmpsB, startB, numSample, 'B')
     df = pd.concat([SampleA, SampleB])
     #df = df.reset_index()
 
     return df
 
-print(makeDataSet(10).shape)
+#print(makeDataSet(10).shape)
