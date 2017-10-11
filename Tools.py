@@ -53,4 +53,4 @@ def makeDataSet(start, numSample):
 
     return df
 
-#print(makeDataSet(10).shape)
+print(makeDataSet(10).shape)
